@@ -81,38 +81,29 @@ for sam in samples:
     freqs = linspace(0,w,n)
     
     pt.subplot(212)
-    #pt.plot(freqs[0:len(freqs)/w*600], signal1[0:len(freqs)/w*600], '-*')
-    #pt.plot(freqs[0:len(freqs)/w*600], signal1[0:len(freqs)/w*600], '-*')
+   # pt.stem(freqs[0:len(freqs)/w*600:10], signal1[0:len(freqs)/w*600:10], '-*')
     sumaLow=0
     sumaHigh=0
     shrimM =0.0
     shrimK =0.0
-    for f in signal1[len(freqs)/w*80:len(freqs)/w*180]:
-        if(f>995000.0):
-            sumaLow=sumaLow+1
-    for f in signal1[len(freqs)/w*150:len(freqs)/w*250]:
-        if(f>995000.0):
-            sumaHigh=sumaHigh+1
-    
-    for f in range(int(len(freqs)/w*80),int(len(freqs)/w*180)-1):
-        shrimM = shrimM + abs(20*log(signal1[f+1]/signal1[f]))
-    shrimM = 1/(len(freqs)/w*80+len(freqs)/w*180-1)*shrimM
-
-    for f in range(int(len(freqs)/w*150),int(len(freqs)/w*250)-1):
-        shrimK = shrimK + abs(20*log(signal1[f+1]/signal1[f]))
-    shrimK = 1/(len(freqs)/w*150+len(freqs)/w*250-1)*shrimK
-
-    
-    if(sumaLow > sumaHigh and shrimM >1.5):
-        pt.plot(freqs[len(freqs)/w*80:len(freqs)/w*180], signal1[len(freqs)/w*80:len(freqs)/w*180], '-*')
+    counter =-1
+    for i in range(int(len(freqs)/w*80),int(len(freqs)/w*180),20):
+        sumaLow = sumaLow + max(signal1[i:i+20]) 
+        counter = counter +1
+    sumaLow = sumaLow/counter 
+    counter =-1
+    for i in range(int(len(freqs)/w*180),int(len(freqs)/w*300),20):
+        sumaHigh = sumaHigh + max(signal1[i:i+20]) 
+        counter = counter +1
+    sumaHigh = sumaHigh/counter 
+    if(sumaLow > sumaHigh):
         if(sam["nameGender"]=="M"):
             correct = correct + 1
     else:
-        pt.plot(freqs[len(freqs)/w*180:len(freqs)/w*300], signal1[len(freqs)/w*180:len(freqs)/w*300], '-*')
         if(sam["nameGender"]=="K"):
             correct = correct + 1
    
-    #pt.show()
+ #   pt.show()
     
 print correct/(counters["femaleCount"]+counters["maleCount"]) 
     
